@@ -3,6 +3,7 @@
  */
 var request = require( 'superagent' ),
 	fs = require( 'mz/fs' ),
+	parseUrl = require( 'url' ).parse,
 	_ = require( 'lodash' ),
 	ghpages = require( 'gh-pages' );
 
@@ -67,6 +68,23 @@ function getCampDate( camp ) {
 	return new Date( parseInt( date * 1000, 10 ) );
 }
 
+function getCampSubdomain( camp ) {
+	var url = getPostMetaValue( camp, 'URL' ),
+		parsed, match;
+
+	if ( ! url ) {
+		return;
+	}
+
+	parsed = parseUrl( url );
+	match = parsed.host.match( /^\d{4}\.([^\.]+)/ );
+	if ( ! match ) {
+		return;
+	}
+
+	return match[ 1 ];
+}
+
 function transformCamp( camp ) {
 	var date = getCampDate( camp );
 
@@ -74,7 +92,8 @@ function transformCamp( camp ) {
 		title: camp.title,
 		slug: camp.slug,
 		date: date.valueOf(),
-		year: date.getFullYear()
+		year: date.getFullYear(),
+		subdomain: getCampSubdomain( camp )
 	};
 }
 
