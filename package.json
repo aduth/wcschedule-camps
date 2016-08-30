@@ -1,0 +1,27 @@
+{
+  "name": "wcschedule-camps",
+  "version": "1.0.0",
+  "description": "Requests, transforms, orders, and uploads scheduled WordCamps",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js",
+    "test": "npm run lint"
+  },
+  "author": {
+    "name": "Andrew Duthie",
+    "email": "andrew@andrewduthie.com",
+    "url": "http://www.andrewduthie.com/"
+  },
+  "license": "GPL-2.0+",
+  "dependencies": {
+    "lodash": "^4.15.0",
+    "mz": "^2.4.0",
+    "superagent": "^2.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.4.0",
+    "eslint-config-wpcalypso": "^0.5.0",
+    "eslint-plugin-wpcalypso": "^2.0.0",
+    "gh-pages": "^0.11.0"
+  }
+}
