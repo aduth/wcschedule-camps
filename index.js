@@ -56,13 +56,25 @@ function fetchScheduledCamps() {
 	} );
 }
 
+function getPostMetaValue( post, key ) {
+	return _.get( _.find( post.post_meta, {
+		key: key
+	} ), 'value' );
+}
+
+function getCampDate( camp ) {
+	var date = getPostMetaValue( camp, 'Start Date (YYYY-mm-dd)' );
+	return new Date( parseInt( date * 1000, 10 ) );
+}
+
 function transformCamp( camp ) {
+	var date = getCampDate( camp );
+
 	return {
 		title: camp.title,
 		slug: camp.slug,
-		date: _.get( _.find( camp.post_meta, {
-			key: 'Start Date (YYYY-mm-dd)'
-		} ), 'value' )
+		date: date.valueOf(),
+		year: date.getFullYear()
 	};
 }
 
