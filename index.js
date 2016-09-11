@@ -85,6 +85,13 @@ function getCampSubdomain( camp ) {
 	return match[ 1 ];
 }
 
+function getCampDescription( camp ) {
+	return camp.content
+		.replace( /<p[^>]*>/g, '' )
+		.replace( /<\/p>/g, '\n\n' )
+		.replace( /(\\n|\s)+$/g, '' );
+}
+
 function transformCamp( camp ) {
 	var date = getCampDate( camp );
 
@@ -93,7 +100,8 @@ function transformCamp( camp ) {
 		slug: camp.slug,
 		date: date.valueOf(),
 		year: date.getFullYear(),
-		subdomain: getCampSubdomain( camp )
+		subdomain: getCampSubdomain( camp ),
+		description: getCampDescription( camp )
 	};
 }
 
