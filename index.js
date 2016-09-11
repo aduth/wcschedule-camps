@@ -89,6 +89,7 @@ function getCampDescription( camp ) {
 	return camp.content
 		.replace( /<p[^>]*>/g, '' )
 		.replace( /<\/p>/g, '\n\n' )
+		.replace( /<br\s*\/?>/g, '\n' )
 		.replace( /(\n){3,}/g, '\n\n' )
 		.replace( /\s+$/g, '' );
 }
