@@ -6,6 +6,8 @@ var request = require( 'superagent' ),
 	parseUrl = require( 'url' ).parse,
 	_ = require( 'lodash' ),
 	striptags = require( 'striptags' ),
+	rimraf = require( 'rimraf' ),
+	mkdirp = require( 'mkdirp' ),
 	ghpages = require( 'gh-pages' );
 
 /**
@@ -13,7 +15,7 @@ var request = require( 'superagent' ),
  */
 var API_BASE = 'https://central.wordcamp.org/wp-json',
 	POSTS_PER_PAGE = 100,
-	OUTPUT_FILE = './camps.json';
+	OUTPUT_ROOT = './api';
 
 function fetchTotalCamps() {
 	return request
@@ -108,8 +110,26 @@ function transformCamp( camp ) {
 	};
 }
 
+function writeCampIndex( camps ) {
+	return fs.writeFile(
+		OUTPUT_ROOT + '/camps/index.json',
+		JSON.stringify( camps )
+	);
+}
+
+function writeCamp( camp ) {
+	return fs.mkdir( OUTPUT_ROOT + '/camps/' + camp.slug ).then( function() {
+		return fs.writeFile(
+			OUTPUT_ROOT + '/camps/' + camp.slug + '/index.json',
+			JSON.stringify( camp )
+		);
+	} );
+}
+
 function writeCamps( camps ) {
-	return fs.writeFile( OUTPUT_FILE, JSON.stringify( camps ) );
+	return Promise.all( [
+		writeCampIndex( camps )
+	].concat( camps.map( writeCamp ) ) );
 }
 
 function fetchAndWriteCamps() {
@@ -121,10 +141,13 @@ function fetchAndWriteCamps() {
 	} );
 }
 
+rimraf.sync( OUTPUT_ROOT );
+fs.mkdirSync( OUTPUT_ROOT );
+fs.mkdirSync( OUTPUT_ROOT + '/camps' );
+
 fetchAndWriteCamps().then( function() {
 	var message = ( new Date() ).toISOString().match( /^(\d{4}-\d{2}-\d{2})/ )[ 1 ];
-	ghpages.publish( __dirname, {
-		src: 'camps.json',
+	ghpages.publish( 'api', {
 		message: message
 	} );
 } ).catch( function( error ) {
