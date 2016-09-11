@@ -5,6 +5,7 @@ var request = require( 'superagent' ),
 	fs = require( 'mz/fs' ),
 	parseUrl = require( 'url' ).parse,
 	_ = require( 'lodash' ),
+	striptags = require( 'striptags' ),
 	ghpages = require( 'gh-pages' );
 
 /**
@@ -86,12 +87,12 @@ function getCampSubdomain( camp ) {
 }
 
 function getCampDescription( camp ) {
-	return camp.content
+	return striptags( camp.content
 		.replace( /<p[^>]*>/g, '' )
 		.replace( /<\/p>/g, '\n\n' )
-		.replace( /<br\s*\/?>/g, '\n' )
-		.replace( /(\n){3,}/g, '\n\n' )
-		.replace( /\s+$/g, '' );
+		.replace( /<br\s*\/?>/g, '\n' ) )
+			.replace( /(\n){3,}/g, '\n\n' )
+			.replace( /\s+$/g, '' );
 }
 
 function transformCamp( camp ) {
