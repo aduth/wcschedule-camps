@@ -118,12 +118,16 @@ function writeCampIndex( camps ) {
 }
 
 function writeCamp( camp ) {
-	return fs.mkdir( OUTPUT_ROOT + '/camps/' + camp.slug ).then( function() {
-		return fs.writeFile(
-			OUTPUT_ROOT + '/camps/' + camp.slug + '/index.json',
-			JSON.stringify( camp )
-		);
-	} );
+	return fs.mkdir( OUTPUT_ROOT + '/camps/' + camp.subdomain )
+		.then( function() {
+			return fs.mkdir( OUTPUT_ROOT + '/camps/' + camp.subdomain + '/' + camp.year );
+		} )
+		.then( function() {
+			return fs.writeFile(
+				OUTPUT_ROOT + '/camps/' + camp.subdomain + '/' + camp.year + '/index.json',
+				JSON.stringify( camp )
+			);
+		} );
 }
 
 function writeCamps( camps ) {
